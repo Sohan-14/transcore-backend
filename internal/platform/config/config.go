@@ -71,9 +71,11 @@ type Logger struct {
 // ===============================================================
 type Database struct {
 	URL             string
-	MaxConns        int
-	MinConns        int
+	MaxConns        int32
+	MinConns        int32
 	MaxConnLifetime time.Duration
 	MaxConnIdleTime time.Duration
 	ConnectTimeout  time.Duration
+	StartupTimeout  time.Duration
+	HealthTimeout   time.Duration
 }

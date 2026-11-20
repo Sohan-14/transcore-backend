@@ -78,6 +78,32 @@ func TestParsers(t *testing.T) {
 		}
 	})
 
+	t.Run("asInt32", func(t *testing.T) {
+		tests := []struct {
+			in      string
+			want    int32
+			wantErr bool
+		}{
+			{in: "25", want: 25},
+			{in: "0", want: 0},
+			{in: "2147483647", want: 2147483647},
+			{in: "-2147483648", want: -2147483648},
+			{in: "2147483648", wantErr: true},
+			{in: "-2147483649", wantErr: true},
+			{in: "not-an-int32", wantErr: true},
+		}
+		for _, tc := range tests {
+			got, err := asInt32(tc.in)
+			if (err != nil) != tc.wantErr {
+				t.Errorf("asInt32(%q) err = %v, wantErr %v", tc.in, err, tc.wantErr)
+				continue
+			}
+			if !tc.wantErr && got != tc.want {
+				t.Errorf("asInt32(%q) = %d, want %d", tc.in, got, tc.want)
+			}
+		}
+	})
+
 	t.Run("asInt64", func(t *testing.T) {
 		got, err := asInt64("1048576")
 		if err != nil || got != 1048576 {
@@ -216,7 +242,7 @@ func TestLoadSuccessAndDefaults(t *testing.T) {
 	if cfg.Logger.Format != LogFormatJSON {
 		t.Errorf("Logger.Format = %q, want %q", cfg.Logger.Format, LogFormatJSON)
 	}
-	if cfg.Database.MaxConns != 10 || cfg.Database.MinConns != 2 {
+	if cfg.Database.MaxConns != int32(10) || cfg.Database.MinConns != int32(2) {
 		t.Errorf("Database conns = (%d, %d), want (10, 2)", cfg.Database.MaxConns, cfg.Database.MinConns)
 	}
 }
@@ -318,6 +344,20 @@ func TestBusinessValidationRules(t *testing.T) {
 			mutate: func(c *Config) {
 				c.Database.MaxConns = 5
 				c.Database.MinConns = 6
+			},
+			wantErr: true,
+		},
+		{
+			name: "database non-positive startup timeout fails",
+			mutate: func(c *Config) {
+				c.Database.StartupTimeout = 0
+			},
+			wantErr: true,
+		},
+		{
+			name: "database non-positive health timeout fails",
+			mutate: func(c *Config) {
+				c.Database.HealthTimeout = 0
 			},
 			wantErr: true,
 		},

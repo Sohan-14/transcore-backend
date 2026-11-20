@@ -20,6 +20,14 @@ func asInt(s string) (int, error) {
 	return strconv.Atoi(s)
 }
 
+func asInt32(s string) (int32, error) {
+	v, err := strconv.ParseInt(s, 10, 32)
+	if err != nil {
+		return 0, err
+	}
+	return int32(v), nil
+}
+
 func asInt64(s string) (int64, error) {
 	return strconv.ParseInt(s, 10, 64)
 }

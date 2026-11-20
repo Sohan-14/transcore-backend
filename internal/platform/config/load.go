@@ -74,10 +74,12 @@ func loadLogger(r *reader) Logger {
 func loadDatabase(r *reader) Database {
 	return Database{
 		URL:             required(r, "DATABASE_URL", asString),
-		MaxConns:        optional(r, "DB_MAX_CONNS", 10, asInt),
-		MinConns:        optional(r, "DB_MIN_CONNS", 2, asInt),
+		MaxConns:        optional(r, "DB_MAX_CONNS", 10, asInt32),
+		MinConns:        optional(r, "DB_MIN_CONNS", 2, asInt32),
 		MaxConnLifetime: optional(r, "DB_MAX_CONN_LIFETIME", 30*time.Minute, asDuration),
 		MaxConnIdleTime: optional(r, "DB_MAX_CONN_IDLE_TIME", 5*time.Minute, asDuration),
 		ConnectTimeout:  optional(r, "DB_CONNECT_TIMEOUT", 5*time.Second, asDuration),
+		StartupTimeout:  optional(r, "DB_STARTUP_TIMEOUT", 15*time.Second, asDuration),
+		HealthTimeout:   optional(r, "DB_HEALTH_TIMEOUT", 3*time.Second, asDuration),
 	}
 }

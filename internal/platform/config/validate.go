@@ -93,6 +93,8 @@ func (db Database) validate(env Environment) error {
 		positive("DB_MAX_CONN_LIFETIME", db.MaxConnLifetime),
 		positive("DB_MAX_CONN_IDLE_TIME", db.MaxConnIdleTime),
 		positive("DB_CONNECT_TIMEOUT", db.ConnectTimeout),
+		positive("DB_STARTUP_TIMEOUT", db.StartupTimeout),
+		positive("DB_HEALTH_TIMEOUT", db.HealthTimeout),
 	}
 
 	if err := db.validateURL(env); err != nil {

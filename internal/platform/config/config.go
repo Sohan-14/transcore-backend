@@ -44,7 +44,9 @@ type HTTP struct {
 	WriteTimeout      time.Duration
 	IdleTimeout       time.Duration
 	ShutdownTimeout   time.Duration
+	DrainDelay        time.Duration
 	MaxBodyBytes      int64
+	MaxHeaderBytes    int
 }
 
 // LogFormat is the log output encoding.

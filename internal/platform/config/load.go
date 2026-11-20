@@ -56,6 +56,8 @@ func loadHTTP(r *reader) HTTP {
 		IdleTimeout:       optional(r, "HTTP_IDLE_TIMEOUT", 60*time.Second, asDuration),
 		ShutdownTimeout:   optional(r, "HTTP_SHUTDOWN_TIMEOUT", 20*time.Second, asDuration),
 		MaxBodyBytes:      optional(r, "HTTP_MAX_BODY_BYTES", 1<<20, asInt64),
+		MaxHeaderBytes:    optional(r, "HTTP_MAX_HEADER_BYTES", 64<<10, asInt),
+		DrainDelay:        optional(r, "HTTP_DRAIN_DELAY", 0, asDuration),
 	}
 }
 

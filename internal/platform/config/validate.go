@@ -28,7 +28,7 @@ func (c *Config) validate() error {
 
 // app validation: check app name validation
 // ===============================================================
-func (a App) validate() error {
+func (a *App) validate() error {
 	if strings.TrimSpace(a.Name) == "" {
 		return fmt.Errorf("%s: must not be empty", "APP_NAME")
 	}
@@ -37,7 +37,7 @@ func (a App) validate() error {
 
 // http validation: check http addr and other values validation
 // ===============================================================
-func (h HTTP) validate() error {
+func (h *HTTP) validate() error {
 	errs := []error{
 		positive("HTTP_READ_TIMEOUT", h.ReadTimeout),
 		positive("HTTP_READ_HEADER_TIMEOUT", h.ReadHeaderTimeout),
@@ -54,6 +54,10 @@ func (h HTTP) validate() error {
 		errs = append(errs, fmt.Errorf("%s: must be greater than 0, got %d", "HTTP_MAX_BODY_BYTES", h.MaxBodyBytes))
 	}
 
+	if h.MaxHeaderBytes <= 0 {
+		errs = append(errs, fmt.Errorf("%s: must be greater than 0, got %d", "HTTP_MAX_HEADER_BYTES", h.MaxHeaderBytes))
+	}
+
 	if h.ReadHeaderTimeout > h.ReadTimeout {
 		errs = append(errs, fmt.Errorf("%s (%v) must not exceed %s (%v)",
 			"HTTP_READ_HEADER_TIMEOUT", h.ReadHeaderTimeout, "HTTP_READ_TIMEOUT", h.ReadTimeout))
@@ -64,7 +68,7 @@ func (h HTTP) validate() error {
 
 // validateAddr: validate http Addr
 // ===============================================================
-func (h HTTP) validateAddr() error {
+func (h *HTTP) validateAddr() error {
 	_, port, err := net.SplitHostPort(h.Addr)
 	if err != nil {
 		return fmt.Errorf("%s: want host:port such as :8080: %w", "HTTP_ADDR", err)
@@ -79,7 +83,7 @@ func (h HTTP) validateAddr() error {
 
 // logger validation: production log format validation
 // ===============================================================
-func (l Logger) validate(env Environment) error {
+func (l *Logger) validate(env Environment) error {
 	if env == Production && l.Format != LogFormatJSON {
 		return fmt.Errorf("%s=%s: %s must be %q", "APP_ENV", env, "LOG_FORMAT", LogFormatJSON)
 	}
@@ -88,7 +92,7 @@ func (l Logger) validate(env Environment) error {
 
 // database validation: development and production both
 // ===============================================================
-func (db Database) validate(env Environment) error {
+func (db *Database) validate(env Environment) error {
 	errs := []error{
 		positive("DB_MAX_CONN_LIFETIME", db.MaxConnLifetime),
 		positive("DB_MAX_CONN_IDLE_TIME", db.MaxConnIdleTime),
@@ -115,7 +119,7 @@ func (db Database) validate(env Environment) error {
 // database url validation: checks the connection URL. It never
 // includes the parse error or the URL itself for the securiry
 // ===============================================================
-func (db Database) validateURL(env Environment) error {
+func (db *Database) validateURL(env Environment) error {
 	u, err := url.Parse(db.URL)
 	if err != nil {
 		return fmt.Errorf("%s: not a valid URL (value hidden)", "DATABASE_URL")

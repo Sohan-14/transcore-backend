@@ -15,7 +15,7 @@ const maxPoolConns = 1000
 // validate runs business-rule validation
 // across all configuration sections.
 // ===============================================================
-func (c Config) validate() error {
+func (c *Config) validate() error {
 	errs := []error{
 		c.App.validate(),
 		c.HTTP.validate(),

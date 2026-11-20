@@ -20,11 +20,16 @@ type Config struct {
 type Environment string
 
 const (
+	// Development is used for local development.
 	Development Environment = "development"
-	Staging     Environment = "staging"
-	Production  Environment = "production"
+	// Staging is used for pre-production testing.
+	Staging Environment = "staging"
+	// Production is used for live production traffic.
+	Production Environment = "production"
 )
 
+// App holds application level settings.
+// ===============================================================
 type App struct {
 	Name        string
 	Environment Environment
@@ -48,10 +53,14 @@ type HTTP struct {
 type LogFormat string
 
 const (
+	// LogFormatJSON formats logs as structured JSON.
 	LogFormatJSON LogFormat = "json"
+	// LogFormatText formats logs as human-readable text.
 	LogFormatText LogFormat = "text"
 )
 
+// Logger holds logger config settings.
+// ===============================================================
 type Logger struct {
 	Level     slog.Level
 	Format    LogFormat

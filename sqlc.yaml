@@ -1,0 +1,19 @@
+version: "2"
+
+sql:
+  # ==================================================
+  # Start: module per
+  # ==================================================
+  # - engine: "postgresql"
+  #   queries: ""
+  #   schema: "migrations/"
+  #   gen:
+  #     go:
+  #       package: "db"
+  #       out: ""
+  #       sql_package: "pgx/v5"
+  #       emit_json_tags: false
+  #       emit_empty_slices: true
+  # ==================================================
+  # END: module per
+  # ==================================================

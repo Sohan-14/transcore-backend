@@ -15,7 +15,7 @@ import (
 func TestNewFormatsAndLevels(t *testing.T) {
 	t.Run("json format outputs valid json", func(t *testing.T) {
 		var buf bytes.Buffer
-		l := New(&buf, config.Logger{
+		l := New(&buf, &config.Logger{
 			Level:  slog.LevelInfo,
 			Format: config.LogFormatJSON,
 		})
@@ -36,7 +36,7 @@ func TestNewFormatsAndLevels(t *testing.T) {
 
 	t.Run("text format outputs key-value pairs", func(t *testing.T) {
 		var buf bytes.Buffer
-		l := New(&buf, config.Logger{
+		l := New(&buf, &config.Logger{
 			Level:  slog.LevelInfo,
 			Format: config.LogFormatText,
 		})
@@ -60,7 +60,7 @@ func TestNewFormatsAndLevels(t *testing.T) {
 
 	t.Run("respects minimum log level", func(t *testing.T) {
 		var buf bytes.Buffer
-		l := New(&buf, config.Logger{
+		l := New(&buf, &config.Logger{
 			Level:  slog.LevelWarn,
 			Format: config.LogFormatJSON,
 		})
@@ -81,7 +81,7 @@ func TestNewFormatsAndLevels(t *testing.T) {
 
 	t.Run("add source includes or omits source info", func(t *testing.T) {
 		var withSrcBuf bytes.Buffer
-		withSrc := New(&withSrcBuf, config.Logger{
+		withSrc := New(&withSrcBuf, &config.Logger{
 			Level:     slog.LevelInfo,
 			Format:    config.LogFormatJSON,
 			AddSource: true,
@@ -93,7 +93,7 @@ func TestNewFormatsAndLevels(t *testing.T) {
 		}
 
 		var withoutSrcBuf bytes.Buffer
-		withoutSrc := New(&withoutSrcBuf, config.Logger{
+		withoutSrc := New(&withoutSrcBuf, &config.Logger{
 			Level:     slog.LevelInfo,
 			Format:    config.LogFormatJSON,
 			AddSource: false,
@@ -106,7 +106,7 @@ func TestNewFormatsAndLevels(t *testing.T) {
 	})
 
 	t.Run("nil writer falls back safely to discard", func(t *testing.T) {
-		l := New(nil, config.Logger{
+		l := New(nil, &config.Logger{
 			Level:  slog.LevelInfo,
 			Format: config.LogFormatJSON,
 		})
@@ -119,7 +119,7 @@ func TestNewFormatsAndLevels(t *testing.T) {
 
 func TestSecretRedaction(t *testing.T) {
 	var buf bytes.Buffer
-	l := New(&buf, config.Logger{
+	l := New(&buf, &config.Logger{
 		Level:  slog.LevelDebug,
 		Format: config.LogFormatJSON,
 	})
@@ -152,7 +152,7 @@ func TestSecretRedaction(t *testing.T) {
 func TestContextAttrsAndIsolation(t *testing.T) {
 	t.Run("merges attributes across chained contexts without mutating siblings", func(t *testing.T) {
 		var buf bytes.Buffer
-		l := New(&buf, config.Logger{
+		l := New(&buf, &config.Logger{
 			Level:  slog.LevelInfo,
 			Format: config.LogFormatJSON,
 		})
@@ -192,7 +192,7 @@ func TestContextAttrsAndIsolation(t *testing.T) {
 
 	t.Run("preserves context attrs with WithAttrs and WithGroup", func(t *testing.T) {
 		var buf bytes.Buffer
-		l := New(&buf, config.Logger{
+		l := New(&buf, &config.Logger{
 			Level:  slog.LevelInfo,
 			Format: config.LogFormatJSON,
 		}).With(slog.String("app", "transcore")).WithGroup("http")
@@ -227,7 +227,7 @@ func TestSetupSetsDefaultLogger(t *testing.T) {
 	})
 
 	var buf bytes.Buffer
-	l := Setup(&buf, config.Logger{
+	l := Setup(&buf, &config.Logger{
 		Level:  slog.LevelInfo,
 		Format: config.LogFormatJSON,
 	})

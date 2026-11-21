@@ -24,7 +24,7 @@ type Database struct {
 // New creates a pgx connection pool from cfg and waits until the database
 // responds to ping or ctx/startup deadline expires.
 // ===============================================================
-func New(ctx context.Context, cfg config.Database, log *slog.Logger) (*Database, error) {
+func New(ctx context.Context, cfg *config.Database, log *slog.Logger) (*Database, error) {
 	poolCfg, err := buildPoolConfig(cfg)
 	if err != nil {
 		return nil, err
@@ -100,7 +100,7 @@ func (db *Database) Close() {
 	db.pool.Close()
 }
 
-func buildPoolConfig(cfg config.Database) (*pgxpool.Config, error) {
+func buildPoolConfig(cfg *config.Database) (*pgxpool.Config, error) {
 
 	poolCfg, err := pgxpool.ParseConfig(cfg.URL)
 	if err != nil {

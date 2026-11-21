@@ -21,7 +21,7 @@ func TestBuildPoolConfig(t *testing.T) {
 			ConnectTimeout:  5 * time.Second,
 		}
 
-		poolCfg, err := buildPoolConfig(cfg)
+		poolCfg, err := buildPoolConfig(&cfg)
 		if err != nil {
 			t.Fatalf("buildPoolConfig returned unexpected error: %v", err)
 		}
@@ -47,7 +47,7 @@ func TestBuildPoolConfig(t *testing.T) {
 	})
 
 	t.Run("returns error for malformed url", func(t *testing.T) {
-		_, err := buildPoolConfig(config.Database{
+		_, err := buildPoolConfig(&config.Database{
 			URL: "://not-a-valid-url",
 		})
 		if err == nil {

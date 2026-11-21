@@ -32,7 +32,7 @@ func redact(_ []string, a slog.Attr) slog.Attr {
 
 // New builds a logger
 // ===============================================================
-func New(w io.Writer, loggerCfg config.Logger) *slog.Logger {
+func New(w io.Writer, loggerCfg *config.Logger) *slog.Logger {
 
 	if w == nil {
 		w = io.Discard
@@ -59,7 +59,7 @@ func New(w io.Writer, loggerCfg config.Logger) *slog.Logger {
 
 // Setup builds a logger and installs it as the slog default.
 // ===============================================================
-func Setup(w io.Writer, loggerCfg config.Logger) *slog.Logger {
+func Setup(w io.Writer, loggerCfg *config.Logger) *slog.Logger {
 	logger := New(w, loggerCfg)
 	slog.SetDefault(logger)
 	return logger

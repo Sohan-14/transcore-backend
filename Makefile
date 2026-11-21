@@ -3,16 +3,18 @@
 # Targets with a `## description` comment show up in help automatically.
 # ====================================================================================
 
+MIGRATIONS_DIR = migrations
+
 .DEFAULT_GOAL := help
 
 # Load .env into the shell
 WITH_ENV := set -a; if [ -f .env ]; then . ./.env; fi; set +a;
 
-.PHONY: help
+.PHONY: help test test-race test-cover lint check migrate-new migrate-up migrate-down migrate-status
 
 # .SILENT: don't show the command
 # in the terminal when use make commands
-.SILENT:
+# .SILENT:
 
 # ====================================================================================
 ##@ Everything
@@ -39,3 +41,19 @@ lint: ## Run golangci-lint using .golangci.yml
 	golangci-lint run
 
 check: lint test-race ## Run linter and race-enabled tests
+
+# ====================================================================================
+##@ Database
+# ====================================================================================
+migrate-new: ## Create a new SQL migration (usage: make migrate-new name=create_accounts)
+	@test -n "$(name)" || (echo "name is required: make migrate-new name=..." && exit 1)
+	@$(WITH_ENV) goose -dir $(MIGRATIONS_DIR) create $(name) sql
+
+migrate-up: ## Run migrations up
+	@$(WITH_ENV) goose -dir $(MIGRATIONS_DIR) postgres "$(DATABASE_URL)" up
+
+migrate-down: ## Rollback the last migration
+	@$(WITH_ENV) goose -dir $(MIGRATIONS_DIR) postgres "$(DATABASE_URL)" down
+
+migrate-status: ## See migration status
+	@$(WITH_ENV) goose -dir $(MIGRATIONS_DIR) postgres "$(DATABASE_URL)" status

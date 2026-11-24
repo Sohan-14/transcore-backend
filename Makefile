@@ -3,7 +3,7 @@
 # Targets with a `## description` comment show up in help automatically.
 # ====================================================================================
 
-MIGRATIONS_DIR = migrations
+MIGRATIONS_DIR = ./migrations
 BIN_DIR  := ./bin
 
 .DEFAULT_GOAL := help
@@ -61,7 +61,7 @@ migrate-new: ## Create a new SQL migration (usage: make migrate-new name=create_
 	@$(WITH_ENV) goose -s -dir $(MIGRATIONS_DIR) create $(name) sql
 
 migrate-up: ## Run migrations up
-	@$(WITH_ENV) goose -dir $(MIGRATIONS_DIR) postgres "$(DATABASE_URL)" up
+	@$(WITH_ENV) goose -dir $(MIGRATIONS_DIR) postgres "$$DATABASE_URL" up
 
 migrate-down: ## Rollback the last migration
 	@$(WITH_ENV) goose -dir $(MIGRATIONS_DIR) postgres "$(DATABASE_URL)" down

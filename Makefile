@@ -11,7 +11,7 @@ BIN_DIR  := ./bin
 # Load .env into the shell
 WITH_ENV := set -a; if [ -f .env ]; then . ./.env; fi; set +a;
 
-.PHONY: help test test-race test-cover lint check migrate-new migrate-up migrate-down migrate-status
+.PHONY: help test test-race test-cover lint check migrate-new migrate-up migrate-down migrate-status up down clean sqlc
 
 # .SILENT: don't show the command
 # in the terminal when use make commands
